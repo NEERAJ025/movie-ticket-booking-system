@@ -1,0 +1,46 @@
+package com.nkediya.bookmyshow.theatre.controller;
+
+import com.nkediya.bookmyshow.movie.service.MovieService;
+import com.nkediya.bookmyshow.common.enums.City;
+import com.nkediya.bookmyshow.movie.dto.Movie;
+import com.nkediya.bookmyshow.theatre.dto.TheatreRequest;
+import com.nkediya.bookmyshow.theatre.dto.TheatreResponse;
+import com.nkediya.bookmyshow.theatre.domain.Theatre;
+import com.nkediya.bookmyshow.theatre.service.TheatreService;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api")
+public class TheatreController {
+
+    private final TheatreService theatreService;
+    private final MovieService movieService;
+
+    public TheatreController(final TheatreService theatreService, final MovieService movieService) {
+        this.theatreService = theatreService;
+        this.movieService = movieService;
+    }
+
+    @PostMapping("/add-theatre")
+    public void addTheatre(@RequestBody TheatreRequest theatreRequest) {
+        theatreService.addTheatre(theatreRequest);
+    }
+
+    @GetMapping("/get-theatre")
+    public List<TheatreResponse> getTheatres(@RequestParam String city, @RequestParam String movieName, @RequestParam String date) {
+       Movie movie = movieService.getMovieByName(movieName);
+        return theatreService.getTheatres(City.valueOf(city), movie, LocalDate.parse(date));
+    }
+
+    @GetMapping("/get-all-theatre")
+    public List<Theatre> getTheatresByCity(@RequestParam City city) {
+        return theatreService.getTheatresByCity(city);
+    }
+
+
+
+
+}

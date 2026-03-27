@@ -1,6 +1,6 @@
 package com.nkediya.bookmyshow.common.Domain;
 
-import com.nkediya.bookmyshow.show.ShowDomain.Show;
+import com.nkediya.bookmyshow.show.domain.Show;
 import lombok.Getter;
 
 import java.time.LocalDate;
