@@ -66,8 +66,14 @@ Here is the use case diagram of Movie Ticket Booking System:
 
 ## Class Diagram
 Here are the main classes of the Movie Ticket Booking System:
-
-
+* **Theatre**: Each theatre will have multiple screens containing multiple seats.
+* **Screen**: Each theatre will have multiple screens, each running multiple shows.
+* **Movie**: The main entity of the system. Movies have attributes like title, description, language, genre, release date, city name, etc.
+* **Show**: Each movie can have many shows; each show will be played in any one screen.
+* **Seat**: Each screen hall will have many seats.
+* **Guest**: Guests can search and view movies descriptions. To make a booking for a show they have to become a registered member.
+* **Booking**: A booking is against a movie show and has attributes like a unique booking number, number of seats, and status.
+* **Payment**: Responsible for collecting payments from customers.
 
 
 Class Diagram for Movie Ticket Booking System:
