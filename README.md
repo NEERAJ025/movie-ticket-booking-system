@@ -84,4 +84,5 @@ Class Diagram for Movie Ticket Booking System:
 We will be using a 3-tier design model with distinct layers, each having a unique set of responsibilities — presentation, application and persistence.
 Presentation layer can be developed using any modern frameworks/libraries like ReactJS, Angular etc. Application layer implements a microservices-oriented architecture. 
 Each microservice implements a hexagonal design pattern for better adaptability, extensibility and easier maintenability.
+
 ![HLD Diagram](diagrams/hld-diagram.png)
