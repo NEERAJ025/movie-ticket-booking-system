@@ -7,7 +7,7 @@ An online movie ticket booking system facilitates the purchasing of movie ticket
 - Java
 - Spring Boot
 - In Memory data saving (Used Map)
-- 
+
 ## How to Run
 1. Clone repo
 2. Run `mvn spring-boot:run`
