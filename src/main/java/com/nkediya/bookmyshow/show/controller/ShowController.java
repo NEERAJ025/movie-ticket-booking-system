@@ -29,7 +29,7 @@ public class ShowController {
     }
 
 
-    @PostMapping("/crete-show")
+    @PostMapping("/create-show")
     public Show createShow(@RequestBody ShowRequest showReq) {
         return showService.createShow(showReq);
     }
@@ -43,7 +43,7 @@ public class ShowController {
     }
 
     @GetMapping("/get-theatre-wise-shows")
-    public List<ShowResponse> getShows(@RequestParam String movieName, @RequestParam String date, @RequestParam String city) {
+    public List<ShowResponse> browseShowsTheaterWise(@RequestParam String movieName, @RequestParam String date, @RequestParam String city) {
         Movie movie = movieService.getMovieByName(movieName);
         return showService.browseShowsTheaterWise(City.valueOf(city.toUpperCase()), movie, LocalDate.parse(date));
     }

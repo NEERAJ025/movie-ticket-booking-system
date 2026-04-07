@@ -8,7 +8,9 @@ import lombok.*;
 @Builder
 public class Movie {
     private String id;
-    private  String name;
+    private String name;
     private String durationInMinutes;
     private String rating;
+    private String languages;
+    private String genres;
 }

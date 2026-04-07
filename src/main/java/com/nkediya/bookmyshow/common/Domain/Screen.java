@@ -13,6 +13,7 @@ import java.util.Map;
 public class Screen {
     private final int screenId;
     private final List<Seat> seats;
+    //price
     private final Map<LocalDate, List<Show>> showsByDate = new HashMap<>();
 
     public Screen(int screenId, List<Seat> seats) {
@@ -26,6 +27,13 @@ public class Screen {
 
     public List<Show> getShows(LocalDate date) {
         return showsByDate.getOrDefault(date, List.of());
+    }
+
+    public List<Show> getAllShows() {
+        return showsByDate.values()
+                .stream()
+                .flatMap(List::stream)
+                .toList();
     }
 
 }

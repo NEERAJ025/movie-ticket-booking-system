@@ -38,7 +38,7 @@ public class BookingController {
     }
 
     @GetMapping("/booking-details")
-    public BookingResponse getBookingDeatils(@RequestParam UUID bookingId) {
+    public BookingResponse getBookingDetails(@RequestParam UUID bookingId) {
         return bookingService.getBookingDetailsWithId(bookingId);
     }
 

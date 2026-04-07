@@ -31,4 +31,15 @@ public class MovieController {
     public Set<Movie> findMovies(@RequestParam City city, @RequestParam String date) {
         return theatreService.getMovies(city, LocalDate.parse(date));
     }
+
+    @GetMapping("/find-movies/name/{movieName}")
+    public Movie findMoviesByName(@PathVariable String movieName) {
+        return movieService.getMovieByName(movieName);
+    }
+
+    @GetMapping("/find-movies/city/{cityName}")
+    public Set<Movie> findMoviesByCity(@PathVariable String cityName) {
+        return movieService.getMoviesByCity(City.valueOf(cityName));
+    }
+
 }

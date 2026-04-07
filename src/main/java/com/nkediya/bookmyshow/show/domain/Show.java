@@ -8,16 +8,19 @@ import com.nkediya.bookmyshow.movie.dto.Movie;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Show {
     private String id;
-    private Movie movie;
+    private final Movie movie;
     private final LocalDate showDate;
     private final LocalTime startTime;
+    //private final Screen screen;
     private final Map<Integer, SeatStatus> seatStatusMap = new HashMap<>();
     private final Map<Integer, ReentrantLock> seatLocks = new HashMap<>();
-
+    private final Map<Integer, Long> seatLockTime = new HashMap<>();
+    private static final long LOCK_TIMEOUT = 2 * 60 * 1000; // 2 minutes
 
     public Show(Movie movie, Screen screen, LocalDate date, LocalTime time) {
         this.movie = movie;
@@ -62,7 +65,17 @@ public class Show {
             // Phase 1: acquire all locks
             for (int seatId : sorted) {
                 ReentrantLock lock = seatLocks.get(seatId);
-                lock.lock();
+                boolean isLocked = false;
+                try {
+                    isLocked = lock.tryLock(2, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return false;
+                }
+
+                if (!isLocked) {
+                    return false;
+                }
                 acquiredLocks.add(lock);
             }
 
@@ -76,6 +89,7 @@ public class Show {
             // Phase 3: mark LOCKED
             for (int seatId : sorted) {
                 seatStatusMap.put(seatId, SeatStatus.SELECTED);
+                seatLockTime.put(seatId, System.currentTimeMillis());
             }
 
             return true;
@@ -97,6 +111,18 @@ public class Show {
     public void releaseSeats(List<Integer> seatIds) {
         for (int seatId : seatIds) {
             seatStatusMap.put(seatId, SeatStatus.AVAILABLE);
+        }
+    }
+
+    public void releaseExpiredSeats() {
+        long now = System.currentTimeMillis();
+
+        for (Integer seatId : seatLockTime.keySet()) {
+            if (seatStatusMap.get(seatId) == SeatStatus.SELECTED &&
+                    now - seatLockTime.get(seatId) > LOCK_TIMEOUT) {
+
+                seatStatusMap.put(seatId, SeatStatus.AVAILABLE);
+            }
         }
     }
 
