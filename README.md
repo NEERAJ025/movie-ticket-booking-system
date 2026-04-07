@@ -92,3 +92,9 @@ Presentation layer can be developed using any modern frameworks/libraries like R
 Each microservice implements a hexagonal design pattern for better adaptability, extensibility and easier maintenability.
 
 ![HLD Diagram](diagrams/hld-diagram.png)
+
+
+## Low Level Architecture
+
+### Detailed design
+![LLD Diagram](diagrams/detailed-lld-diagram.png)
