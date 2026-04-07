@@ -1,7 +1,7 @@
 # Movie Ticket Booking System
 
 ## Overview
-This project implements...
+An online movie ticket booking system facilitates the purchasing of movie tickets to its customers. E-ticketing systems allow customers to browse through movies currently playing and book seats, anywhere and anytime.
 
 ## Tech Stack
 - Java
@@ -17,14 +17,14 @@ This project implements...
 - Seat locking
 - Payment simulation
 
-## Design
+## Design Used
 - Strategy Pattern for pricing
 - Service layer architecture
 
 
 ## System Requirements
 
-### Functionl
+### Functional
 1. Enable theatre partners to onboard their theatres over this platform and get access to a bigger customer base while going digital.
 2. Enable end customers to browse the platform to get access to movies across different cities, languages, and genres, as well as book tickets in advance with a seamless experience.
 3. Browse theatres currently running the show (movie selected) in the town, including show timing by a chosen date.
