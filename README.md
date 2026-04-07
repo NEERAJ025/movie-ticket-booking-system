@@ -25,25 +25,25 @@ This project implements...
 ## System Requirements
 
 ### Functionl
-1.Enable theatre partners to onboard their theatres over this platform and get access to a bigger customer base while going digital.
-2.Enable end customers to browse the platform to get access to movies across different cities, languages, and genres, as well as book tickets in advance with a seamless experience.
-3.Browse theatres currently running the show (movie selected) in the town, including show timing by a chosen date.
-4.Booking platform offers in selected cities and theatres
-      ◦ 50% discount on the third ticket
-      ◦ Tickets booked for the afternoon show get a 20% discount
-5.Book movie tickets by selecting a theatre, timing, and preferred seats for the day.
-6.Theatres can create, update, and delete shows for the day.
-7.Theatres can allocate seat inventory and update them for the show.
-8.Bulk booking and cancellation.
+1. Enable theatre partners to onboard their theatres over this platform and get access to a bigger customer base while going digital.
+2. Enable end customers to browse the platform to get access to movies across different cities, languages, and genres, as well as book tickets in advance with a seamless experience.
+3. Browse theatres currently running the show (movie selected) in the town, including show timing by a chosen date.
+4. Booking platform offers in selected cities and theatres:
+     50% discount on the third ticket
+   Tickets booked for the afternoon show get a 20% discount
+5. Book movie tickets by selecting a theatre, timing, and preferred seats for the day.
+6. Theatres can create, update, and delete shows for the day.
+7. Theatres can allocate seat inventory and update them for the show.
+8. Bulk booking and cancellation.
 
 ### Non-Functionl
-1.Describe transactional scenarios and design decisions to address the same.
-2.How to scale to multiple cities, countries and guarantee platform availability of 99.99%?
-3.Integration with payment gateways
-4.How do you monetize platform?
-5.How to protect against OWASP top 10 threats.
-6.Integrate with theatres having existing IT system and new theatres and localization(movies).
-7.Any Compliance
+1. Describe transactional scenarios and design decisions to address the same.
+2. How to scale to multiple cities, countries and guarantee platform availability of 99.99%?
+3. Integration with payment gateways
+4. How do you monetize platform?
+5. How to protect against OWASP top 10 threats.
+6. Integrate with theatres having existing IT system and new theatres and localization(movies).
+7. Any Compliance
 
 ## Use Case Diagram
 
@@ -66,3 +66,17 @@ Here is the use case diagram of Movie Ticket Booking System:
 
 ## Class Diagram
 Here are the main classes of the Movie Ticket Booking System:
+
+
+
+
+Class Diagram for Movie Ticket Booking System:
+![Class Diagram](diagrams/class-diagram.png)
+
+
+
+## Activity Diagrams
+**Make a booking**: Any customer can perform this activity. Here are the steps to book a ticket for a show:
+![Activity Diagram](diagrams/activity-diagram.png)
+
+
