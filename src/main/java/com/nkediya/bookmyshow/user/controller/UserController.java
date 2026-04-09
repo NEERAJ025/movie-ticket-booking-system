@@ -12,11 +12,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/crete-user")
+    @PostMapping("/user")
     public User createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
-    @GetMapping("/get-user/{id}")
+    @GetMapping("/user/{id}")
     public User getUser(@PathVariable String id) {
         return userService.getById(id);
     }

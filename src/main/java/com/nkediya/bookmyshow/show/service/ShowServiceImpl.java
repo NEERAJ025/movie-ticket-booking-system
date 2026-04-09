@@ -2,6 +2,7 @@ package com.nkediya.bookmyshow.show.service;
 
 import com.nkediya.bookmyshow.common.Domain.Screen;
 import com.nkediya.bookmyshow.common.enums.City;
+import com.nkediya.bookmyshow.common.enums.SeatStatus;
 import com.nkediya.bookmyshow.movie.dto.Movie;
 import com.nkediya.bookmyshow.movie.service.MovieService;
 import com.nkediya.bookmyshow.show.dto.ShowRequest;
@@ -25,11 +26,11 @@ public class ShowServiceImpl implements ShowService {
     @Autowired
     TheatreService theatreService;
 
-    private final Map<String, Show> showMap= new HashMap<>();
+    private final Map<String, Show> showMap = new HashMap<>();
     private AtomicInteger idGenerator = new AtomicInteger();
 
     @Override
-    public Show createShow(ShowRequest showRequest) {
+    public ShowResponse createShow(ShowRequest showRequest) {
         Movie movie = movieService.getMovieByName(showRequest.getMovieName());
         City city = City.valueOf(showRequest.getCity().toUpperCase());
         Theatre theatre = theatreService.getTheatre(
@@ -56,14 +57,78 @@ public class ShowServiceImpl implements ShowService {
         // Attach show to screen
         screen.addShow(show);
 
-        return show;
+        return ShowResponse.builder()
+                .theatreName(theatre.getName())
+                .city(theatre.getCity().name())
+                .shows(List.of(ShowResponse.ShowInfo.builder().showId(show.getId()).movieName(show.getMovie().getName()).startTime(show.getStartTime()).screenId(screen.getScreenId()).build()))
+                .build();
+
     }
 
     @Override
-    public List<Show> getShows(Movie movie, LocalDate date, Theatre theatre) {
-        return theatre.getScreens().stream()
-                .flatMap(screen -> screen.getShows(date).stream())
-                .filter(show -> show.getMovie().getName().equals(movie.getName())).toList();
+    public ShowResponse updateShow(String id, ShowRequest showRequest) {
+        Show existingShow = Optional.ofNullable(showMap.get(id)).orElseThrow(() -> new RuntimeException("Show not Found"));
+        Movie movie = movieService.getMovieByName(showRequest.getMovieName());
+        City city = City.valueOf(showRequest.getCity().toUpperCase());
+        Theatre theatre = theatreService.getTheatre(
+                showRequest.getTheatreName(), city);
+        Screen screen = theatre.getScreens().stream()
+                .filter(s -> s.getScreenId() == showRequest.getScreenId())
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Screen not found"));
+
+        removeShowFromAllScreens(existingShow);
+
+        existingShow.setMovie(movie);
+        existingShow.setShowDate(showRequest.getDate());
+        existingShow.setStartTime(showRequest.getTime());
+        screen.addShow(existingShow);
+
+        return ShowResponse.builder()
+                .theatreName(theatre.getName())
+                .city(theatre.getCity().name())
+                .shows(List.of(ShowResponse.ShowInfo.builder().showId(existingShow.getId()).movieName(existingShow.getMovie().getName()).startTime(existingShow.getStartTime()).screenId(screen.getScreenId()).build()))
+                .build();
+    }
+
+    private void removeShowFromAllScreens(Show show) {
+        for (City c : City.values()) {
+            List<Theatre> theatres = theatreService.getTheatresByCity(c);
+
+            for (Theatre t : theatres) {
+                for (Screen screen : t.getScreens()) {
+                    screen.removeShow(show);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<ShowResponse> getShows(Movie movie, LocalDate date, Theatre theatre) {
+
+        List<ShowResponse.ShowInfo> showInfos = theatre.getScreens().stream()
+                .flatMap(screen -> screen.getShows(date).stream()
+                        .filter(show -> show.getMovie().getName().equals(movie.getName()))
+                        .map(show -> ShowResponse.ShowInfo.builder()
+                                .showId(show.getId())
+                                .movieName(show.getMovie().getName())
+                                .startTime(show.getStartTime())
+                                .screenId(screen.getScreenId())
+                                .build()
+                        )
+                ).toList();
+
+        if (showInfos.isEmpty()) {
+            return List.of();
+        }
+
+        ShowResponse response = ShowResponse.builder()
+                .theatreName(theatre.getName())
+                .city(theatre.getCity().name())
+                .shows(showInfos)
+                .build();
+
+        return List.of(response);
     }
 
     @Override
@@ -101,6 +166,26 @@ public class ShowServiceImpl implements ShowService {
     public Show getShowById(String showId) {
         return Optional.ofNullable(showMap.get(showId))
                 .orElseThrow(() -> new RuntimeException("Show not found with id: " + showId));
+    }
+
+    @Override
+    public void deleteShow(String showId) {
+
+        Show show = Optional.ofNullable(showMap.get(showId))
+                .orElseThrow(() -> new RuntimeException("Show not found"));
+
+        if (hasLockedSeats(show)) {
+            throw new RuntimeException("Cannot delete show with locked seats");
+        }
+
+        show.getScreen().removeShow(show);
+
+        showMap.remove(showId);
+    }
+
+    private boolean hasLockedSeats(Show show) {
+        return show.getSeatStatusMap().values().stream()
+                .anyMatch(status -> status == SeatStatus.SELECTED);
     }
 
 }

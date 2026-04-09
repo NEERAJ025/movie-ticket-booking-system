@@ -28,17 +28,15 @@ public class BookingController {
         this.showService = showService;
     }
 
-    @PostMapping("/create-bookings")
-    public Booking createBooking(@RequestBody BookingRequest bookingRequest) {
+    @PostMapping("/bookings")
+    public BookingResponse createBooking(@RequestBody BookingRequest bookingRequest) {
         User user = userService.getById(bookingRequest.getUserId());
         Show show = showService.getShowById (bookingRequest.getShowId());
-
-        Booking booking = bookingService.book(user, show, bookingRequest.getSeatIds());
-        return booking;
+        return bookingService.book(user, show, bookingRequest.getSeatIds());
     }
 
-    @GetMapping("/booking-details")
-    public BookingResponse getBookingDetails(@RequestParam UUID bookingId) {
+    @GetMapping("/bookings/{id}")
+    public BookingResponse getBookingDetails(@PathVariable UUID bookingId) {
         return bookingService.getBookingDetailsWithId(bookingId);
     }
 

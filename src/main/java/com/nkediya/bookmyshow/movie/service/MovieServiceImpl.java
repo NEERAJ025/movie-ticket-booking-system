@@ -22,15 +22,15 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<Movie> creteMovies(List<String> movieNames) {
-        List<Movie> movies = new ArrayList<>();
-        for(String movieName : movieNames){
-            Movie movie =  Movie.builder().id(UUID.randomUUID().toString())
-                    .name(movieName).build();
-            movieMap.put(movie.getName().toLowerCase(),movie);
-            movies.add(movie);
+    public List<Movie> creteMovies(List<Movie> movies) {
+        List<Movie> movieList = new ArrayList<>();
+        for(Movie movie : movies){
+            Movie movieBuilder =  Movie.builder().id(UUID.randomUUID().toString())
+                    .name(movie.getName()).durationInMinutes(movie.getDurationInMinutes()).language(movie.getLanguage()).genres(movie.getGenres()).build();
+            movieMap.put(movie.getName().toLowerCase(),movieBuilder);
+            movieList.add(movieBuilder);
         }
-        return movies;
+        return movieList;
 
     }
 

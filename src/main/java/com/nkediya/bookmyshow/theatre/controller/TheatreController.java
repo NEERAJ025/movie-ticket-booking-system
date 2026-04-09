@@ -7,6 +7,8 @@ import com.nkediya.bookmyshow.theatre.dto.TheatreRequest;
 import com.nkediya.bookmyshow.theatre.dto.TheatreResponse;
 import com.nkediya.bookmyshow.theatre.domain.Theatre;
 import com.nkediya.bookmyshow.theatre.service.TheatreService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -24,20 +26,31 @@ public class TheatreController {
         this.movieService = movieService;
     }
 
-    @PostMapping("/add-theatre")
-    public void addTheatre(@RequestBody TheatreRequest theatreRequest) {
-        theatreService.addTheatre(theatreRequest);
+    @PostMapping("/theatres")
+    public ResponseEntity<TheatreResponse> addTheatre(@RequestBody TheatreRequest theatreRequest) {
+        Theatre theatre = theatreService.addTheatre(theatreRequest);
+        if (theatreRequest.getScreens() == null || theatreRequest.getScreens().isEmpty()) {
+            throw new IllegalArgumentException("At least one screen is required");
+        }else{
+            TheatreResponse response = TheatreResponse.builder().city(theatre.getCity().name()).name(theatre.getName()).totalScreens(theatre.getScreens().size()).build();
+            return  ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+        }
+
     }
 
-    @GetMapping("/get-theatre")
+    @GetMapping("/theatres")
     public List<TheatreResponse> getTheatres(@RequestParam String city, @RequestParam String movieName, @RequestParam String date) {
        Movie movie = movieService.getMovieByName(movieName);
         return theatreService.getTheatres(City.valueOf(city), movie, LocalDate.parse(date));
     }
 
-    @GetMapping("/get-all-theatre")
-    public List<Theatre> getTheatresByCity(@RequestParam City city) {
-        return theatreService.getTheatresByCity(city);
+    @GetMapping("/theatres/{city}")
+    public List<TheatreResponse> getTheatresByCity(@PathVariable("city") City city) {
+        List<Theatre> theatres = theatreService.getTheatresByCity(city);
+        return theatres.stream().map(theatre -> TheatreResponse.builder().city(theatre.getCity().name()).name(theatre.getName())
+                .totalScreens(theatre.getScreens().size()).build()).toList();
+
     }
 
 

@@ -9,6 +9,7 @@ import com.nkediya.bookmyshow.show.domain.Show;
 import com.nkediya.bookmyshow.show.service.ShowService;
 import com.nkediya.bookmyshow.theatre.domain.Theatre;
 import com.nkediya.bookmyshow.theatre.service.TheatreService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -29,22 +30,33 @@ public class ShowController {
     }
 
 
-    @PostMapping("/create-show")
-    public Show createShow(@RequestBody ShowRequest showReq) {
+    @PostMapping("/shows")
+    public ShowResponse createShow(@RequestBody ShowRequest showReq) {
         return showService.createShow(showReq);
     }
 
-    @GetMapping("/get-shows")
-    public List<Show> getShows(@RequestParam String movieName, @RequestParam String date,
+    @PutMapping("/shows/{showId}")
+    public ShowResponse updateShow(@PathVariable String showId, @RequestBody ShowRequest showReq) {
+        return showService.updateShow(showId, showReq);
+    }
+
+    @GetMapping("/shows")
+    public List<ShowResponse> getShows(@RequestParam String movieName, @RequestParam String date,
                                @RequestParam String theatreName, @RequestParam String city) {
         Movie movie = movieService.getMovieByName(movieName);
         Theatre theatre = theatreService.getTheatre(theatreName,City.valueOf(city.toUpperCase()));
         return showService.getShows(movie, LocalDate.parse(date), theatre);
     }
 
-    @GetMapping("/get-theatre-wise-shows")
-    public List<ShowResponse> browseShowsTheaterWise(@RequestParam String movieName, @RequestParam String date, @RequestParam String city) {
-        Movie movie = movieService.getMovieByName(movieName);
-        return showService.browseShowsTheaterWise(City.valueOf(city.toUpperCase()), movie, LocalDate.parse(date));
+    @DeleteMapping("/show/{showId}")
+    public ResponseEntity<String> deleteShow(@PathVariable String showId) {
+        showService.deleteShow(showId);
+        return ResponseEntity.ok("Show deleted successfully");
     }
+
+//    @GetMapping("/shows")
+//    public List<ShowResponse> browseShowsTheaterWise(@RequestParam String movieName, @RequestParam String date, @RequestParam String city) {
+//        Movie movie = movieService.getMovieByName(movieName);
+//        return showService.browseShowsTheaterWise(City.valueOf(city.toUpperCase()), movie, LocalDate.parse(date));
+//    }
 }

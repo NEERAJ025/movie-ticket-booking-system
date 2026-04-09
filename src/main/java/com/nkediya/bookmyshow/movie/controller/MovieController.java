@@ -22,22 +22,22 @@ public class MovieController {
         this.theatreService = theatreService;
     }
 
-    @PostMapping("/add-movies")
-    public List<Movie> createMovies(@RequestBody List<String> movieNames) {
-        return movieService.creteMovies(movieNames);
+    @PostMapping("/movies")
+    public List<Movie> createMovies(@RequestBody List<Movie> movies) {
+        return movieService.creteMovies(movies);
     }
 
-    @GetMapping("/find-movies")
+    @GetMapping("/movies")
     public Set<Movie> findMovies(@RequestParam City city, @RequestParam String date) {
         return theatreService.getMovies(city, LocalDate.parse(date));
     }
 
-    @GetMapping("/find-movies/name/{movieName}")
+    @GetMapping("/movies/{movieName}")
     public Movie findMoviesByName(@PathVariable String movieName) {
         return movieService.getMovieByName(movieName);
     }
 
-    @GetMapping("/find-movies/city/{cityName}")
+    @GetMapping("/movies/{cityName}")
     public Set<Movie> findMoviesByCity(@PathVariable String cityName) {
         return movieService.getMoviesByCity(City.valueOf(cityName));
     }

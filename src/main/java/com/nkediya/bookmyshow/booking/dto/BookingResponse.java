@@ -19,4 +19,5 @@ public class BookingResponse {
     private LocalTime showTime;
     private List<Integer> seats;
     private String paymentStatus;
+    private double totalAmount;
 }

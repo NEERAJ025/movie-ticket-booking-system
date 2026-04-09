@@ -11,9 +11,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ShowService {
-    Show createShow(ShowRequest request);
-    List<Show> getShows(Movie movie, LocalDate date, Theatre theatre);
+    ShowResponse createShow(ShowRequest request);
+    ShowResponse updateShow(String id, ShowRequest request);
+    List<ShowResponse> getShows(Movie movie, LocalDate date, Theatre theatre);
     List<ShowResponse> browseShowsTheaterWise(City city, Movie movie, LocalDate date);
     Show getShowById(String showId);
+    void deleteShow(String showId);
 
 }

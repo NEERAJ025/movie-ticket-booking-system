@@ -10,7 +10,6 @@ public class Movie {
     private String id;
     private String name;
     private String durationInMinutes;
-    private String rating;
-    private String languages;
+    private String language;
     private String genres;
 }

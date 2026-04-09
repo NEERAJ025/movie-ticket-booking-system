@@ -25,6 +25,19 @@ public class Screen {
         showsByDate.computeIfAbsent(show.getShowDate(), d -> new ArrayList<>()).add(show);
     }
 
+    public void removeShow(Show show) {
+        List<Show> shows = showsByDate.get(show.getShowDate());
+
+        if (shows != null) {
+            shows.removeIf(s -> s.getId().equals(show.getId()));
+
+            // Optional cleanup (VERY GOOD PRACTICE)
+            if (shows.isEmpty()) {
+                showsByDate.remove(show.getShowDate());
+            }
+        }
+    }
+
     public List<Show> getShows(LocalDate date) {
         return showsByDate.getOrDefault(date, List.of());
     }

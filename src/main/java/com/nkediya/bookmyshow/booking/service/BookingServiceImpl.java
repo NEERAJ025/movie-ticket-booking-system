@@ -25,7 +25,7 @@ public class BookingServiceImpl implements BookingService{
     }
 
     @Override
-    public Booking book(User user, Show show, List<Integer> seats) {
+    public BookingResponse book(User user, Show show, List<Integer> seats) {
         if (!show.lockSeats(seats)) {
             throw new RuntimeException("Seat unavailable");
         }
@@ -38,7 +38,17 @@ public class BookingServiceImpl implements BookingService{
             show.confirmSeats(seats);
             Booking booking =  new Booking(user, show, seats, payment);
             bookings.put(booking.getBookingId(), booking);
-            return booking;
+
+             return BookingResponse.builder()
+                    .bookingId(booking.getBookingId())
+                    .userName(booking.getUser().getName())
+                    .movieName(booking.getShow().getMovie().getName())
+                    .showDate(booking.getShow().getShowDate())
+                    .showTime(booking.getShow().getStartTime())
+                    .seats(booking.getSeats())
+                    .paymentStatus(booking.getPayment().getStatus().name())
+                     .totalAmount(booking.getPayment().getAmount())
+                    .build();
         } else {
             show.releaseSeats(seats);
             throw new RuntimeException("Payment failed");
@@ -64,6 +74,7 @@ public class BookingServiceImpl implements BookingService{
                 .showTime(show.getStartTime())
                 .seats(booking.getSeats())
                 .paymentStatus(booking.getPayment().getStatus().name())
+                .totalAmount(booking.getPayment().getAmount())
                 .build();
     }
 

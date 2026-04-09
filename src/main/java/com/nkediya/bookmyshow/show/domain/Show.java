@@ -13,10 +13,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Show {
     private String id;
-    private final Movie movie;
-    private final LocalDate showDate;
-    private final LocalTime startTime;
-    //private final Screen screen;
+    private Movie movie;
+    private LocalDate showDate;
+    private LocalTime startTime;
+    private final Screen screen;
     private final Map<Integer, SeatStatus> seatStatusMap = new HashMap<>();
     private final Map<Integer, ReentrantLock> seatLocks = new HashMap<>();
     private final Map<Integer, Long> seatLockTime = new HashMap<>();
@@ -26,6 +26,7 @@ public class Show {
         this.movie = movie;
         this.showDate = date;
         this.startTime = time;
+        this.screen = screen;
 
         for (Seat seat : screen.getSeats()) {
             seatStatusMap.put(seat.getSeatId(), SeatStatus.AVAILABLE);
@@ -41,16 +42,33 @@ public class Show {
         this.id = id;
     }
 
+    public Screen getScreen() {
+        return screen;
+    }
+
     public Movie getMovie() {
         return movie;
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
     }
 
     public LocalDate getShowDate() {
         return showDate;
     }
 
+    public void setShowDate(LocalDate showDate) {
+        this.showDate = showDate;
+    }
+
+
     public LocalTime getStartTime() {
         return startTime;
+    }
+
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
     }
 
     public boolean lockSeats(List<Integer> seatIds) {
@@ -67,7 +85,7 @@ public class Show {
                 ReentrantLock lock = seatLocks.get(seatId);
                 boolean isLocked = false;
                 try {
-                    isLocked = lock.tryLock(2, TimeUnit.SECONDS);
+                    isLocked = lock.tryLock(10, TimeUnit.SECONDS);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     return false;
@@ -124,6 +142,12 @@ public class Show {
                 seatStatusMap.put(seatId, SeatStatus.AVAILABLE);
             }
         }
+    }
+
+
+
+    public Map<Integer, SeatStatus> getSeatStatusMap() {
+        return seatStatusMap;
     }
 
 

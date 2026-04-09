@@ -2,5 +2,7 @@ package com.nkediya.bookmyshow.common.enums;
 
 public enum City {
     BANGALORE,
-    DELHI
+    DELHI,
+    JAIPUR,
+    RANCHI;
 }

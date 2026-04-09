@@ -1,5 +1,6 @@
 package com.nkediya.bookmyshow.theatre.service;
 
+import com.nkediya.bookmyshow.common.DTO.SeatInfo;
 import com.nkediya.bookmyshow.common.Domain.Screen;
 import com.nkediya.bookmyshow.common.Domain.Seat;
 import com.nkediya.bookmyshow.show.domain.Show;
@@ -22,7 +23,7 @@ public class TheatreServiceImpl implements TheatreService {
     @Override
     public Theatre addTheatre(TheatreRequest theatreReq) {
 
-        List<Screen> screens = theatreReq.getScreens().stream().map(s -> new Screen(s.getScreenId(), createSeats(s.getTotalSeats()))).toList();
+        List<Screen> screens = theatreReq.getScreens().stream().map(s -> new Screen(s.getScreenId(), createSeats(s.getSeatInfo()))).toList();
 
         Theatre theatre = new Theatre(theatreReq.getName(), City.valueOf(theatreReq.getCity().toUpperCase()), screens);
 
@@ -58,7 +59,7 @@ public class TheatreServiceImpl implements TheatreService {
                 .anyMatch(screen -> screen.getShows(date)
                         .stream()
                         .anyMatch(show -> show.getMovie().getName().equals(movie.getName()))))
-                .map(theatre -> TheatreResponse.builder().name(theatre.getName()).city(theatre.getCity().name())
+                .map(theatre -> TheatreResponse.builder().name(theatre.getName()).city(theatre.getCity().name()).totalScreens(theatre.getScreens().size())
                         .build()).toList();
     }
 
@@ -71,11 +72,22 @@ public class TheatreServiceImpl implements TheatreService {
         return cityTheatres.getOrDefault(city, List.of());
     }
 
-    private List<Seat> createSeats(int totalSeats) {
+//    private List<Seat> createSeats(int totalSeats) {
+//        List<Seat> seats = new ArrayList<>();
+//        for (int i = 1; i <= totalSeats; i++) {
+//            seats.add(new Seat(i, SeatCategory.SILVER));
+//        }
+//        return seats;
+//    }
+
+    private List<Seat> createSeats(List<SeatInfo> seatInfoList) {
         List<Seat> seats = new ArrayList<>();
-        for (int i = 1; i <= totalSeats; i++) {
-            seats.add(new Seat(i, SeatCategory.SILVER));
+        for(SeatInfo seatInfo: seatInfoList){
+            for (int i = 1; i <= seatInfo.getCount(); i++) {
+                seats.add(new Seat(i, seatInfo.getCategory()));
+            }
         }
+
         return seats;
     }
 

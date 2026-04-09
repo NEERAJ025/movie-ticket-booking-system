@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface MovieService {
-    public List<Movie> creteMovies(List<String> movieNames);
+    public List<Movie> creteMovies(List<Movie> movieNames);
     Movie getMovieByName(String movieName);
     Set<Movie> getMoviesByCity(City city);
 }

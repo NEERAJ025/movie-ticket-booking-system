@@ -20,5 +20,6 @@ public class ShowResponse {
         private String showId;
         private LocalTime startTime;
         private String movieName;
+        private int screenId;
     }
 }

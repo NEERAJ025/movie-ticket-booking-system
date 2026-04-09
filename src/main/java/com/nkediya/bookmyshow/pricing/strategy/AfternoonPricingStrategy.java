@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class AfternoonPricingStrategy implements PricingStrategy {
     @Override
-    @Order(1)
+    @Order(2)
     public double apply(Show show, List<Integer> seats, double currentTotal) {
 
         if (isAfternoon(show)) {

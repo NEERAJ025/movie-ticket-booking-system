@@ -2,8 +2,10 @@ package com.nkediya.bookmyshow.common.DTO;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ScreenRequest {
     private int screenId;
-    private int totalSeats;
+    private List<SeatInfo> seatInfo;
 }
