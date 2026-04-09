@@ -12,6 +12,8 @@ import com.nkediya.bookmyshow.show.domain.Show;
 import com.nkediya.bookmyshow.theatre.domain.Theatre;
 import com.nkediya.bookmyshow.theatre.service.TheatreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -31,6 +33,7 @@ public class ShowServiceImpl implements ShowService {
     private AtomicInteger idGenerator = new AtomicInteger();
 
     @Override
+    @CacheEvict(value = "shows", allEntries = true)
     public ShowResponse createShow(ShowRequest showRequest) {
         Movie movie = movieService.getMovieByName(showRequest.getMovieName());
         City city = City.valueOf(showRequest.getCity().toUpperCase());
@@ -67,6 +70,7 @@ public class ShowServiceImpl implements ShowService {
     }
 
     @Override
+    @CacheEvict(value = "shows", allEntries = true)
     public ShowResponse updateShow(String id, ShowRequest showRequest) {
         Show existingShow = Optional.ofNullable(showMap.get(id)).orElseThrow(() -> new RuntimeException("Show not Found"));
         Movie movie = movieService.getMovieByName(showRequest.getMovieName());
@@ -105,6 +109,7 @@ public class ShowServiceImpl implements ShowService {
     }
 
     @Override
+    @Cacheable(value = "shows", key = "#movie.name + '_' + #date + '_' + #theatre.name")
     public List<ShowResponse> getShows(Movie movie, LocalDate date, Theatre theatre) {
 
         List<ShowResponse.ShowInfo> showInfos = theatre.getScreens().stream()
@@ -170,6 +175,7 @@ public class ShowServiceImpl implements ShowService {
     }
 
     @Override
+    @CacheEvict(value = "shows", allEntries = true)
     public void deleteShow(String showId) {
 
         Show show = Optional.ofNullable(showMap.get(showId))

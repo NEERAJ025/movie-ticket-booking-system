@@ -6,6 +6,7 @@ import com.nkediya.bookmyshow.movie.dto.Movie;
 import com.nkediya.bookmyshow.show.domain.Show;
 import com.nkediya.bookmyshow.theatre.domain.Theatre;
 import com.nkediya.bookmyshow.theatre.service.TheatreService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -35,6 +36,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    @Cacheable(value = "movies", key = "#movieName")
     public Movie getMovieByName(String movieName) {
         return Optional.ofNullable(movieMap.get(movieName.toLowerCase()))
                 .orElseThrow(() -> new RuntimeException("Movie not found"));

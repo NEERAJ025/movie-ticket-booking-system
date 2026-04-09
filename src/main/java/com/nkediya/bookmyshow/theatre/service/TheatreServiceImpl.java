@@ -10,6 +10,7 @@ import com.nkediya.bookmyshow.movie.dto.Movie;
 import com.nkediya.bookmyshow.theatre.dto.TheatreRequest;
 import com.nkediya.bookmyshow.theatre.dto.TheatreResponse;
 import com.nkediya.bookmyshow.theatre.domain.Theatre;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -68,6 +69,7 @@ public class TheatreServiceImpl implements TheatreService {
     }
 
     @Override
+    @Cacheable(value = "theatres", key = "#city")
     public List<Theatre> getTheatresByCity(City city) {
         return cityTheatres.getOrDefault(city, List.of());
     }
