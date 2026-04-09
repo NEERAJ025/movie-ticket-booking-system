@@ -3,6 +3,7 @@ package com.nkediya.bookmyshow.booking.service;
 import com.nkediya.bookmyshow.booking.dto.BookingResponse;
 import com.nkediya.bookmyshow.booking.domain.Booking;
 import com.nkediya.bookmyshow.common.Domain.Payment;
+import com.nkediya.bookmyshow.common.exception.SeatUnavailableException;
 import com.nkediya.bookmyshow.pricing.service.PricingService;
 import com.nkediya.bookmyshow.show.domain.Show;
 import com.nkediya.bookmyshow.common.enums.PaymentStatus;
@@ -27,7 +28,7 @@ public class BookingServiceImpl implements BookingService{
     @Override
     public BookingResponse book(User user, Show show, List<Integer> seats) {
         if (!show.lockSeats(seats)) {
-            throw new RuntimeException("Seat unavailable");
+            throw new SeatUnavailableException("Seats already booked or locked");
         }
 
         //simulated payment flow here, we can invoke Pay method of Payment Controller

@@ -3,6 +3,7 @@ package com.nkediya.bookmyshow.show.service;
 import com.nkediya.bookmyshow.common.Domain.Screen;
 import com.nkediya.bookmyshow.common.enums.City;
 import com.nkediya.bookmyshow.common.enums.SeatStatus;
+import com.nkediya.bookmyshow.common.exception.ResourceNotFoundException;
 import com.nkediya.bookmyshow.movie.dto.Movie;
 import com.nkediya.bookmyshow.movie.service.MovieService;
 import com.nkediya.bookmyshow.show.dto.ShowRequest;
@@ -165,14 +166,14 @@ public class ShowServiceImpl implements ShowService {
     @Override
     public Show getShowById(String showId) {
         return Optional.ofNullable(showMap.get(showId))
-                .orElseThrow(() -> new RuntimeException("Show not found with id: " + showId));
+                .orElseThrow(() -> new ResourceNotFoundException("Show not found with id: " + showId));
     }
 
     @Override
     public void deleteShow(String showId) {
 
         Show show = Optional.ofNullable(showMap.get(showId))
-                .orElseThrow(() -> new RuntimeException("Show not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Show not found with id: " + showId));
 
         if (hasLockedSeats(show)) {
             throw new RuntimeException("Cannot delete show with locked seats");
