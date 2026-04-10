@@ -9,12 +9,14 @@ import com.nkediya.bookmyshow.movie.service.MovieService;
 import com.nkediya.bookmyshow.show.dto.ShowRequest;
 import com.nkediya.bookmyshow.show.dto.ShowResponse;
 import com.nkediya.bookmyshow.show.domain.Show;
+import com.nkediya.bookmyshow.show.repository.ShowRepository;
 import com.nkediya.bookmyshow.theatre.domain.Theatre;
 import com.nkediya.bookmyshow.theatre.service.TheatreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -22,6 +24,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class ShowServiceImpl implements ShowService {
+
+    private final ShowRepository showRepository;
+
+    public ShowServiceImpl(ShowRepository showRepository) {
+        this.showRepository = showRepository;
+    }
 
     @Autowired
     MovieService movieService;
@@ -67,6 +75,11 @@ public class ShowServiceImpl implements ShowService {
                 .shows(List.of(ShowResponse.ShowInfo.builder().showId(show.getId()).movieName(show.getMovie().getName()).startTime(show.getStartTime()).screenId(screen.getScreenId()).build()))
                 .build();
 
+    }
+
+    @Transactional
+    public com.nkediya.bookmyshow.show.entity.Show createShow(com.nkediya.bookmyshow.show.entity.Show show) {
+        return showRepository.save(show);
     }
 
     @Override
