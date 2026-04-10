@@ -3,10 +3,16 @@
 ## Overview
 An online movie ticket booking system facilitates the purchasing of movie tickets to its customers. E-ticketing systems allow customers to browse through movies currently playing and book seats, anywhere and anytime.
 
-## Tech Stack
+## Current Tech Stack(release 1)
 - Java
 - Spring Boot
 - In Memory data saving (Used Map)
+
+
+## Future Changes Can be done(release 2)
+- Adding H2 DB
+- Using Entity Class
+- Using Transactional Properties
 
 ## How to Run
 1. Clone repo
